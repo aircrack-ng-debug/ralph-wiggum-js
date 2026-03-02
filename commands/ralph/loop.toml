@@ -1,0 +1,27 @@
+description = "Start Ralph loop in current session."
+prompt = """
+You are starting the Ralph loop.
+
+**Step 1: Initialization**
+Run the setup script to initialize the loop state:
+```
+node "${extensionPath}/scripts/setup.js" $ARGUMENTS
+```
+
+**Supported Arguments for setup.js:**
+- `--max-iterations <N>`: Maximum number of loop iterations (default: 5).
+- `--completion-promise <TEXT>`: A text token that must be output to finish.
+
+**CRITICAL**: Pass the user's arguments **VERBATIM** to the script. Do not rename, reorder, or infer flags. If the user provides `--max-time`, pass `--max-time`.
+
+**Step 2: Execution (Management)**
+You are now in a **persistent, self-correcting development loop**. You'll see your previous work in files, creating a
+self-referential loop where you iteratively improve on the same task. When you complete this turn, the **exact same prompt** (above) will be fed back to you automatically.
+
+**Loop Constraints:**
+- **Iteration Count**: Monitor `"current_iteration"` in `.gemini/ralph/state.json`. If `"max_iterations"` (if > 0) is reached, you must stop. **DO NOT** increment this count yourself; the Ralph loop mechanism handles this automatically after each turn.
+- **Completion Promise**: If a `"completion_promise"` is defined in `.gemini/ralph/state.json`, you must output `<promise>PROMISE_TEXT</promise>` when the task is genuinely complete.
+- **Stop Hook**: A hook is active. If you try to exit before completion, you will be forced to continue.
+
+To stop manually, use `/ralph:cancel`.
+"""

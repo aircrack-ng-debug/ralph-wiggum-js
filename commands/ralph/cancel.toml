@@ -1,0 +1,9 @@
+description = "Cancels an active Ralph loop."
+prompt = """
+You are stopping the Ralph loop.
+
+Run the cancel script to deactivate the stop hook and clean up state:
+```
+node "${extensionPath}/scripts/cancel.js"
+```
+"""

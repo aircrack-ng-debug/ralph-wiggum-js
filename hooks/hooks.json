@@ -1,0 +1,17 @@
+{
+    "hooks": {
+        "AfterAgent": [
+            {
+                "matcher": "*",
+                "hooks": [
+                    {
+                        "name": "ralph-loop",
+                        "type": "command",
+                        "command": "node ${extensionPath}/scripts/stop-hook.js",
+                        "description": "The Ralph infinite loop mechanism (Node.js, cross-platform)"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "name": "ralph-wiggum-js",
+    "version": "1.0.0",
+    "description": "Cross-platform Node.js Gemini CLI extension for the Ralph Wiggum Loop — no shell dependencies",
+    "license": "Apache-2.0",
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "keywords": [
+        "gemini-cli",
+        "extension",
+        "ralph-wiggum",
+        "loop",
+        "cross-platform"
+    ],
+    "scripts": {
+        "test": "node tests/run-tests.js"
+    }
+}
