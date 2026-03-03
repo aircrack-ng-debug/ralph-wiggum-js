@@ -208,6 +208,37 @@ cleanup();
     assert(!fs.existsSync(STATE_FILE), 'State file cleaned up on mismatch');
 })();
 
+// Test 5b: Ghost Protection — template-wrapped prompt should NOT trigger mismatch
+(function test_ghostProtectionTemplate() {
+    writeState({
+        active: true,
+        current_iteration: 1,
+        max_iterations: 10,
+        completion_promise: '',
+        original_prompt: 'Build a REST API'
+    });
+    // Simulate the real scenario: AfterAgent receives the full loop.toml template
+    // with the task embedded at the end, not just the bare task text.
+    const templatePrompt = `You are starting the Ralph loop.
+
+**Step 1: Initialization**
+Run the setup script to initialize the loop state...
+
+**Step 2: Execution (Management)**
+You are now in a persistent, self-correcting development loop.
+
+/ralph:loop "Build a REST API" --max-iterations 10`;
+    const { output } = runHook({
+        prompt: templatePrompt,
+        prompt_response: 'Working on it...',
+        cwd: TMP
+    });
+    assert(output.decision === 'deny', 'Template-wrapped prompt → deny (loop continues)');
+    assert(output.systemMessage && output.systemMessage.includes('iteration 2'), 'Template prompt: iteration incremented');
+})();
+
+cleanup();
+
 // Test 6: Inactive loop → allow
 (function test_inactiveLoop() {
     writeState({

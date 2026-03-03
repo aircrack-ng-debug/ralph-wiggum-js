@@ -142,7 +142,21 @@ async function main() {
         const cleanCurrent = normalizePrompt(currentPrompt);
         const cleanOriginal = normalizePrompt(originalPrompt);
 
-        if (cleanCurrent && cleanOriginal && cleanCurrent !== cleanOriginal) {
+        // Use "includes" instead of strict equality: the currentPrompt from
+        // AfterAgent contains the full loop.toml template text with the task
+        // embedded, while original_prompt is just the bare task text.  A strict
+        // comparison always fails on iteration 1 because the template wrapper
+        // is present.  Checking that one string contains the other handles
+        // both the template-wrapped case (iteration 1) and the bare-prompt
+        // case (iteration 2+ where reason == original_prompt).
+        const isMatch =
+            cleanCurrent === cleanOriginal ||
+            (cleanCurrent && cleanOriginal && (
+                cleanCurrent.includes(cleanOriginal) ||
+                cleanOriginal.includes(cleanCurrent)
+            ));
+
+        if (cleanCurrent && cleanOriginal && !isMatch) {
             // User started a new task — silently deactivate the loop
             cleanup(stateFile);
             allow({
